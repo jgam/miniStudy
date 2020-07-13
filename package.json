@@ -11,5 +11,8 @@
     "mongoose": "^5.9.23",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4"
+  },
+  "scripts":{
+    "dev": "nodemon src/index.js"
   }
 }
