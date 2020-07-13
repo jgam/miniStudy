@@ -14,28 +14,28 @@ app.get('/', (req,res,next) => {
 app.post('/api/user/register', async (req,res,next) => {
     //get userinfo
     try{
-    const existingUser = await UserEntity.findOne({
-        email: req.body.email
-    })
-
-    if(existingUser){
-        res.status(404).json({
-            ok: false,
-            msg: 'already registered user',
+        const existingUser = await UserEntity.findOne({
+            email: req.body.email
         })
-    }
 
-    const newUser = await UserEntity.create({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password,
-    })
+        if(existingUser){
+            res.status(404).json({
+                ok: false,
+                msg: 'already registered user',
+            })
+        }
+
+        const newUser = await UserEntity.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+        })
 
 
-    res.status(201).json({
-        ok: true,
-        msg: `${newUser.username}, welcome abroad!`
-    })
+        res.status(201).json({
+            ok: true,
+            msg: `${newUser.username}, welcome abroad!`
+        })
     }catch(error){
         res.status(500).json({
             ok: false,
@@ -45,9 +45,24 @@ app.post('/api/user/register', async (req,res,next) => {
 })
 
 //login
-app.post('/api/user/login', (req,res,next) => {
+app.post('/api/user/login', async (req,res,next) => {
+    const existingUser = await userEntity.findOne({
+        email: req.body.email
+    })
+
+    if(existingUser){
+        res.status(401).json({
+            ok: false,
+            msg: "not existing email"
+        })
+    }
+
+    const token = existingUser.generateToken()
+
     res.status(201).json({
-        result: 'succesfully Logged in'
+        ok: true,
+        msg: "token provided succesfully",
+        payload: token,
     })
 })
 
