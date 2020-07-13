@@ -1,4 +1,6 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const UserEntity = require('./entity/user.entity');
 
 const app = express()
 
@@ -9,9 +11,26 @@ app.get('/', (req,res,next) => {
 })
 
 //register
-app.post('/api/user/register', (req,res,next) => {
+app.post('/api/user/register', async (req,res,next) => {
     //get userinfo
-    
+    const existingUser = await UserEntity.findOne({
+        email: req.body.email
+    })
+
+    if(existingUser){
+        res.status(404).json({
+            ok: false,
+            msg: 'already registered user',
+        })
+    }
+
+    const newUser = await UserEntity.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+    })
+
+
     res.status(201).json({
         result: 'succesfully registered new user'
     })
@@ -33,5 +52,11 @@ app.get('/api/user/me', (req,res,next) => {
 
 
 const PORT = 3333;
+const MONGO_URI = 'mongodb+srv://jgam:19921019@cluster0.c46hz.mongodb.net/miniTama?retryWrites=true&w=majority';
 
-app.listen(PORT, () => {console.log(`running at current port ${PORT} boi!`)})
+app.listen(PORT, () => {
+    mongoose.connect(MONGO_URI, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true
+    })
+    console.log(`running at current port ${PORT} boi!`)})
