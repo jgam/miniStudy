@@ -13,6 +13,7 @@ app.get('/', (req,res,next) => {
 //register
 app.post('/api/user/register', async (req,res,next) => {
     //get userinfo
+    try{
     const existingUser = await UserEntity.findOne({
         email: req.body.email
     })
@@ -32,8 +33,15 @@ app.post('/api/user/register', async (req,res,next) => {
 
 
     res.status(201).json({
-        result: 'succesfully registered new user'
+        ok: true,
+        msg: `${newUser.username}, welcome abroad!`
     })
+    }catch(error){
+        res.status(500).json({
+            ok: false,
+            msg: 'error occurred in post'
+        })
+    }
 })
 
 //login
