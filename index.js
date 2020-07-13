@@ -47,11 +47,11 @@ app.post('/api/user/register', async (req,res,next) => {
 
 //login
 app.post('/api/user/login', async (req,res,next) => {
-    const existingUser = await userEntity.findOne({
+    const existingUser = await UserEntity.findOne({
         email: req.body.email
     })
 
-    if(existingUser){
+    if(!existingUser){
         res.status(401).json({
             ok: false,
             msg: "not existing email"
