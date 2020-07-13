@@ -1,15 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const UserEntity = require('./entity/user.entity');
 
 const app = express()
 
-app.get('/', (req,res,next) => {
-    res.status(200).json({
-        msg: '200 success!',
-    })
-})
-
+app.use(bodyParser.json());
 //register
 app.post('/api/user/register', async (req,res,next) => {
     //get userinfo
@@ -25,11 +21,14 @@ app.post('/api/user/register', async (req,res,next) => {
             })
         }
 
+        
         const newUser = await UserEntity.create({
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
         })
+
+        
 
 
         res.status(201).json({
@@ -39,7 +38,7 @@ app.post('/api/user/register', async (req,res,next) => {
     }catch(error){
         res.status(500).json({
             ok: false,
-            msg: 'error occurred in post'
+            msg: 'error occurred in post catch'
         })
     }
 })
