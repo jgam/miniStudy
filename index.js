@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const UserEntity = require('./entity/user.entity');
 
-const app = express()
+const app = express();
 
 app.use(bodyParser.json());
 //register
@@ -21,13 +21,15 @@ app.post('/api/user/register', async (req,res,next) => {
             })
         }
 
-        
+        console.log('im here')
+        //until here it is fine
         const newUser = await UserEntity.create({
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
         })
-
+        console.log('got in here');
+        console.log(newUser);
         
 
 
